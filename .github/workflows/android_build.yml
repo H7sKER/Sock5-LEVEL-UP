@@ -36,6 +36,10 @@ jobs:
           exit 1
         fi
 
+        - name: Verify JAR existence
+          run: ls -l gradle/wrapper/gradle-wrapper.jar
+
+
     - name: Auto-Inject Image Assets
       run: |
         echo "🔍 Checking for image.png in root directory..."
