@@ -1,4 +1,4 @@
-name: Android APK Cloud Compiler
+Name: Android APK Cloud Compiler
 
 on:
   push:
@@ -23,6 +23,20 @@ jobs:
     - name: Grant Execute Permission for Gradle Wrapper
       run: chmod +x gradlew
 
+    # ✅ Verify gradle-wrapper.jar exists
+    - name: Verify Gradle Wrapper JAR
+      run: |
+        echo "🔍 Checking gradle-wrapper.jar location..."
+        if [ -f "gradle/wrapper/gradle-wrapper.jar" ]; then
+          echo "✅ gradle-wrapper.jar found at: gradle/wrapper/gradle-wrapper.jar"
+          ls -la gradle/wrapper/gradle-wrapper.jar
+        else
+          echo "❌ gradle-wrapper.jar NOT found!"
+          echo "📁 Contents of gradle/wrapper/:"
+          ls -la gradle/wrapper/ || echo "Directory empty or not exists"
+          exit 1
+        fi
+
     # ✅ NEW STEP: Auto-detect and inject image.png
     - name: Auto-Inject Image Assets
       run: |
@@ -43,36 +57,34 @@ jobs:
           mkdir -p app/src/main/res/mipmap-xxhdpi
           mkdir -p app/src/main/res/mipmap-xxxhdpi
           
-          # Copy original image to drawable (for rounded/square usage)
+          # Copy original image to drawable
           cp image.png app/src/main/res/drawable/custom_image.png
-          
-          # For rounded corners (use same image, Android code handles rounding)
           cp image.png app/src/main/res/drawable/rounded_image.png
           
-          # Copy to all mipmap folders for launcher icon (if needed)
+          # Copy to all mipmap folders for launcher icon
           cp image.png app/src/main/res/mipmap-mdpi/ic_launcher.png
           cp image.png app/src/main/res/mipmap-hdpi/ic_launcher.png
           cp image.png app/src/main/res/mipmap-xhdpi/ic_launcher.png
           cp image.png app/src/main/res/mipmap-xxhdpi/ic_launcher.png
           cp image.png app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
           
-          # Create rounded corner version using ImageMagick (if installed)
+          # Create rounded corner version
           sudo apt-get update
           sudo apt-get install -y imagemagick
           
-          # Create rounded version with corner radius
           convert image.png -alpha set -virtual-pixel transparent -channel A -morphology Distance Euclidean:1,10! +channel -format png -resize 512x512 app/src/main/res/drawable/rounded_image_rounded.png
           
           echo "✅ Image injected successfully!"
-          echo "📁 Square image: drawable/custom_image.png"
-          echo "📁 Rounded image: drawable/rounded_image.png"
-          echo "📁 Launcher icons: mipmap folders"
         else
           echo "⚠️ No image.png found in root, skipping..."
         fi
 
+    # ✅ Build with explicit gradle wrapper path
     - name: Build Debug APK with Gradle Cloud Workers
-      run: ./gradlew assembleDebug
+      run: |
+        echo "📦 Building APK using gradlew..."
+        echo "📍 Using wrapper from: gradle/wrapper/gradle-wrapper.jar"
+        ./gradlew assembleDebug --stacktrace
 
     - name: Upload Finished V1.0.0 APK Artifact
       uses: actions/upload-artifact@v4
