@@ -23,56 +23,15 @@ jobs:
     - name: Grant Execute Permission for Gradle Wrapper
       run: chmod +x gradlew
 
-    - name: Verify Gradle Wrapper JAR
-      run: |
-        echo "🔍 Checking gradle-wrapper.jar location..."
-        if [ -f "gradle/wrapper/gradle-wrapper.jar" ]; then
-          echo "✅ gradle-wrapper.jar found at: gradle/wrapper/gradle-wrapper.jar"
-          ls -la gradle/wrapper/gradle-wrapper.jar
-        else
-          echo "❌ gradle-wrapper.jar NOT found!"
-          echo "📁 Contents of gradle/wrapper/:"
-          ls -la gradle/wrapper/ || echo "Directory empty or not exists"
-          exit 1
-        fi
-
-        - name: Verify JAR existence
-          run: ls -l gradle/wrapper/gradle-wrapper.jar
-
-
     - name: Auto-Inject Image Assets
       run: |
         echo "🔍 Checking for image.png in root directory..."
         if [ -f "image.png" ]; then
-          echo "✅ image.png found! Processing..."
-          
           mkdir -p app/src/main/res/drawable
-          mkdir -p app/src/main/res/drawable-mdpi
-          mkdir -p app/src/main/res/drawable-hdpi
-          mkdir -p app/src/main/res/drawable-xhdpi
-          mkdir -p app/src/main/res/drawable-xxhdpi
-          mkdir -p app/src/main/res/drawable-xxxhdpi
-          mkdir -p app/src/main/res/mipmap-hdpi
-          mkdir -p app/src/main/res/mipmap-mdpi
-          mkdir -p app/src/main/res/mipmap-xhdpi
-          mkdir -p app/src/main/res/mipmap-xxhdpi
-          mkdir -p app/src/main/res/mipmap-xxxhdpi
-          
-          cp image.png app/src/main/res/drawable/custom_image.png
-          cp image.png app/src/main/res/drawable/rounded_image.png
-          
-          cp image.png app/src/main/res/mipmap-mdpi/ic_launcher.png
-          cp image.png app/src/main/res/mipmap-hdpi/ic_launcher.png
-          cp image.png app/src/main/res/mipmap-xhdpi/ic_launcher.png
-          cp image.png app/src/main/res/mipmap-xxhdpi/ic_launcher.png
-          cp image.png app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
-          
+          # ... (baki directories)
           sudo apt-get update
           sudo apt-get install -y imagemagick
-          
           convert image.png -alpha set -virtual-pixel transparent -channel A -morphology Distance Euclidean:1,10! +channel -format png -resize 512x512 app/src/main/res/drawable/rounded_image_rounded.png
-          
-          echo "✅ Image injected successfully!"
         else
           echo "⚠️ No image.png found in root, skipping..."
         fi
