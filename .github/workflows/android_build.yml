@@ -18,26 +18,35 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-        cache: gradle
 
     - name: Grant Execute Permission for Gradle Wrapper
       run: chmod +x gradlew
 
+    - name: Force Fix Gradle Wrapper
+      run: |
+        echo "🔄 Ensuring gradle-wrapper.jar is valid..."
+        rm -rf gradle/wrapper/gradle-wrapper.jar
+        curl -L https://raw.githubusercontent.com/gradle/gradle/v8.6/gradle/wrapper/gradle-wrapper.jar -o gradle/wrapper/gradle-wrapper.jar
+        chmod +x gradle/wrapper/gradle-wrapper.jar
+
     - name: Auto-Inject Image Assets
       run: |
-        echo "🔍 Checking for image.png in root directory..."
         if [ -f "image.png" ]; then
-          mkdir -p app/src/main/res/drawable
-          # ... (baki directories)
-          sudo apt-get update
-          sudo apt-get install -y imagemagick
-          convert image.png -alpha set -virtual-pixel transparent -channel A -morphology Distance Euclidean:1,10! +channel -format png -resize 512x512 app/src/main/res/drawable/rounded_image_rounded.png
+          echo "Processing images..."
+          mkdir -p app/src/main/res/drawable app/src/main/res/mipmap-mdpi app/src/main/res/mipmap-hdpi app/src/main/res/mipmap-xhdpi app/src/main/res/mipmap-xxhdpi app/src/main/res/mipmap-xxxhdpi
+          cp image.png app/src/main/res/drawable/custom_image.png
+          cp image.png app/src/main/res/mipmap-mdpi/ic_launcher.png
+          cp image.png app/src/main/res/mipmap-hdpi/ic_launcher.png
+          cp image.png app/src/main/res/mipmap-xhdpi/ic_launcher.png
+          cp image.png app/src/main/res/mipmap-xxhdpi/ic_launcher.png
+          cp image.png app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
         else
-          echo "⚠️ No image.png found in root, skipping..."
+          echo "image.png not found, skipping..."
         fi
 
     - name: Build Debug APK
-      run: ./gradlew assembleDebug --stacktrace
+      run: |
+        ./gradlew clean assembleDebug --stacktrace --no-daemon
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
@@ -45,3 +54,4 @@ jobs:
         name: H7sKER-TOOL
         path: app/build/outputs/apk/debug/app-debug.apk
         retention-days: 7
+
