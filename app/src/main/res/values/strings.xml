@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Level Up Bot</string>
+    <string name="app_tagline">Your Gaming Power Unleashed</string>
+    <string name="btn_start">START</string>
+    <string name="btn_stop">STOP</string>
+    <string name="btn_connect">CONNECT</string>
+    <string name="hint_username">Username</string>
+    <string name="hint_password">Password</string>
+    <string name="status_connected">● CONNECTED</string>
+    <string name="status_disconnected">○ DISCONNECTED</string>
+    <string name="about_creator">ZuyCEO</string>
+    <string name="about_version">Version 1.0</string>
+    <string name="about_desc">Level Up Bot is a premium network proxy tool designed for gamers who demand the best connection quality.</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_about">About</string>
+    <string name="auth_title">Authentication Required</string>
+    <string name="auth_subtitle">Enter credentials to continue</string>
+    <string name="error_wrong_creds">Wrong username or password!</string>
+    <string name="service_running">Proxy service running</string>
+    <string name="notification_channel">Level Up Bot Service</string>
+    <string name="proxy_started">Proxy Started Successfully</string>
+    <string name="proxy_stopped">Proxy Stopped</string>
+</resources>

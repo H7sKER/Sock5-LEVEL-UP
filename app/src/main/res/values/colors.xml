@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="splash_bg">#0A0E2E</color>
+    <color name="primary_blue">#1565FF</color>
+    <color name="primary_light_blue">#42A5F5</color>
+    <color name="accent_cyan">#00E5FF</color>
+    <color name="accent_purple">#7C4DFF</color>
+    <color name="bg_dark">#060918</color>
+    <color name="bg_card">#111433</color>
+    <color name="bg_card2">#0D1240</color>
+    <color name="text_white">#FFFFFF</color>
+    <color name="text_grey">#8A9CC8</color>
+    <color name="green_online">#00E676</color>
+    <color name="red_offline">#FF1744</color>
+    <color name="yellow_glow">#FFD740</color>
+    <color name="transparent">#00000000</color>
+</resources>
