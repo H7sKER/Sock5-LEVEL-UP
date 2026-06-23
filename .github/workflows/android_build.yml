@@ -1,8 +1,8 @@
-Name: Android APK Cloud Compiler
+name: Android APK Cloud Compiler
 
 on:
   push:
-    branches: [ v1.0.0 ]
+    branches: [ "v1.0.0" ]
   workflow_dispatch:
 
 jobs:
@@ -23,7 +23,6 @@ jobs:
     - name: Grant Execute Permission for Gradle Wrapper
       run: chmod +x gradlew
 
-    # ✅ Verify gradle-wrapper.jar exists
     - name: Verify Gradle Wrapper JAR
       run: |
         echo "🔍 Checking gradle-wrapper.jar location..."
@@ -37,14 +36,12 @@ jobs:
           exit 1
         fi
 
-    # ✅ NEW STEP: Auto-detect and inject image.png
     - name: Auto-Inject Image Assets
       run: |
         echo "🔍 Checking for image.png in root directory..."
         if [ -f "image.png" ]; then
           echo "✅ image.png found! Processing..."
           
-          # Create required directories
           mkdir -p app/src/main/res/drawable
           mkdir -p app/src/main/res/drawable-mdpi
           mkdir -p app/src/main/res/drawable-hdpi
@@ -57,18 +54,15 @@ jobs:
           mkdir -p app/src/main/res/mipmap-xxhdpi
           mkdir -p app/src/main/res/mipmap-xxxhdpi
           
-          # Copy original image to drawable
           cp image.png app/src/main/res/drawable/custom_image.png
           cp image.png app/src/main/res/drawable/rounded_image.png
           
-          # Copy to all mipmap folders for launcher icon
           cp image.png app/src/main/res/mipmap-mdpi/ic_launcher.png
           cp image.png app/src/main/res/mipmap-hdpi/ic_launcher.png
           cp image.png app/src/main/res/mipmap-xhdpi/ic_launcher.png
           cp image.png app/src/main/res/mipmap-xxhdpi/ic_launcher.png
           cp image.png app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
           
-          # Create rounded corner version
           sudo apt-get update
           sudo apt-get install -y imagemagick
           
@@ -79,16 +73,12 @@ jobs:
           echo "⚠️ No image.png found in root, skipping..."
         fi
 
-    # ✅ Build with explicit gradle wrapper path
-    - name: Build Debug APK with Gradle Cloud Workers
-      run: |
-        echo "📦 Building APK using gradlew..."
-        echo "📍 Using wrapper from: gradle/wrapper/gradle-wrapper.jar"
-        ./gradlew assembleDebug --stacktrace
+    - name: Build Debug APK
+      run: ./gradlew assembleDebug --stacktrace
 
-    - name: Upload Finished V1.0.0 APK Artifact
+    - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: H7sKER TOOL
+        name: H7sKER-TOOL
         path: app/build/outputs/apk/debug/app-debug.apk
         retention-days: 7
